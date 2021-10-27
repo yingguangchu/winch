@@ -1,0 +1,4590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+ <Model version="4.7" build="4.7.1.8902">
+  <Sidops><![CDATA[model 128 184
+ description '<Information>
+ <Description>
+    <Version>4.7</Version>
+<IsMainModel>0</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>C:\Users\yingguangc\Downloads\Publications-preprint\GCEwinch\20171206\winch2nd.emx</LibraryPath>
+  <TimeStamp>2018-8-3 09:59:32</TimeStamp>
+</Description>
+</Information>';
+ type Mainmodel
+ end;
+ implementation bg
+  submodels
+   model 264 152
+    description '<Information>
+ <Description>
+    <Version>4.6</Version>
+<IsMainModel>0</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>T:\iv\ihb\Mechlab\GCEwinch\20171129\winch2nd.emx</LibraryPath>
+  <TimeStamp>2017-11-30 10:29:26</TimeStamp>
+</Description>
+</Information>';
+    type Mainmodel
+    end;
+    implementation bg
+     submodels
+      Heave 40 72
+       description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Sources\WaveGenerator-Sine.emx</LibraryPath><TimeStamp>2007-9-27 16:12:6</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type 'WaveGenerator-Sine'
+        ports
+         signal out vheave;
+       end;
+       icon bg bottom
+        figures
+         group
+          rectangle 24 56 56 88 color 0 fill 15132390;
+          line 28.5 62.4 28.5 81.6 color 0;
+          line 54.1 72 25.3 72 color 0;
+          spline 28.9 71.9 32.1 63.8 35.3 71.9 38.6 80 41.7 71.9 44.8 63.8 48.1 71.9 51.6 80.2 54.8 72.2 color 16711680;
+         end;
+       end;
+       implementation eq
+parameters 
+   real amplitude = 0.8;
+   real period = 12;
+variables
+	real heave;
+equations
+	"calculate the sine wave"
+	vheave = amplitude * sin ( 2*pi/period * time-1.57);
+	heave = int(-vheave);
+
+
+	
+implementation_end;
+      HydController 96 184.1
+       description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Control\PID Control\Continuous\Controller-PI_sp_aw.emx</LibraryPath><TimeStamp>2007-9-27 13:56:28</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration></Configuration></Description></Information>';
+       type 'Controller-PI_sp_aw'
+        ports
+         signal in vheave;
+         signal in vload;
+         signal out displacementGain;
+         signal in kp;
+         signal in Ti;
+         signal out heave;
+       end;
+       icon bg bottom
+        figures
+         rectangle 64 160.1 128 208.1 color 0 fill 15132390;
+         text 'PI' 104 184.1 color 16711680 18 bold;
+         text 'SP' 76.8 175 color 16711680 14;
+         text 'MV' 78.9 190 color 16711680 14;
+         group
+          group
+           line 98.2 206 101.4 201.1 104.9 206 98.2 206 color 0 fill 0;
+           line 91.7 201.1 111.4 201.1 color 0;
+          end;
+          text 'sp' 103 191.7 color 0 14;
+         end;
+         text 'aw' 110.1 169.8 color 0 14;
+         group
+          line 110.8 182.1 114.9 182.1 122.9 165.5 color 0;
+          line 122.7 165.8 126.9 165.8 color 0;
+         end;
+        terminals
+         vheave 64 176 fixed;
+         vload 64 192 fixed;
+         displacementGain 128 184.1 fixed;
+         kp 96 159.1 fixed;
+         Ti 96 159.1 fixed;
+         heave 129 184.1 fixed;
+       end;
+       implementation eq
+parameters
+	real minimum = -1 {};	// Minimum controller output
+	real maximum = 1 {};	// Maximum controller output	
+variables
+	real error, uP,uI, ideal_output;
+equations
+	error = vheave-vload;
+	uP = kp * error;
+	uI = (kp/Ti)* int(error);
+	ideal_output = uP + uI;
+	displacementGain = limit (ideal_output, minimum, maximum);
+   heave = int(-vheave);
+    
+                                                                                     implementation_end;
+      Parameters 96 32
+       description '<Information><Description><Version>4.0</Version><LibraryPath>Template\Submodel-Equation.emx</LibraryPath><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><TimeStamp>2007-11-1 22:32:1</TimeStamp><AllowLibraryUpdate>False</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type 'input-Equation'
+        ports
+         signal out mload;
+         signal out lwire;
+         signal out dwire;
+         signal out rdrum;
+         signal out Vmmotor;
+         signal out nhydgear;
+         signal out idrum;
+         signal out rfriction;
+         signal out nhydmotor;
+         signal out cdwire;
+         signal out VmHP;
+         signal out vHP;
+         signal out pmaxHP;
+         signal out dpmaxHP;
+         signal out vLP;
+         signal out VmLP;
+         signal out bulkmodulus;
+         signal out Vacc;
+         signal out rho;
+         signal out PopenLP;
+         signal out Qdp5LP;
+         signal out kleak;
+         signal out Cd;
+         signal out Qdp5HP;
+         signal out PopenHP;
+         signal out Lpipe;
+         signal out Dpipe;
+         signal out visc;
+         signal out npumpHP;
+         signal out Pgas;
+         signal out Vgas;
+         signal out kgas;
+         signal out kp;
+         signal out Ti;
+       end;
+       implementation eq
+equations
+   mload = 150e3; // total mass of the payload
+   dwire = 0.077; // diameter of the wire
+   lwire = 2950;  // payout length of the wire
+   cdwire = 0.15; // damping coefficient of the wire
+   rdrum = 2.2; // radius of the winch drum
+   idrum = 314600; // total inertia of the winch drum
+   nhydgear = 300;  // gearratio
+
+   nhydmotor = 3; // number of motors
+   Vmmotor = 1e-3; //dispalcement of the motor in m3 per rev
+   rfriction = 0.05; //friction factor of the motor
+
+   npumpHP = 3; // number of pumps
+   VmHP = 0.001; // dispalcement of the main pump in m^3/rev
+	vHP = 1776; // speed of the main pump in rpm
+	pmaxHP = 350e5; // maximum high pressure pump 
+	dpmaxHP = 10e5; // pressure difference at which the HPU supplies maximum flow
+	
+   VmLP = 0.001; // dispalcement of the boost pump in m^3/rev
+	vLP = 1776; // speed of the boost pump in rpm
+	
+   bulkmodulus = 1.6e9; // bulkmodulus of the liquid
+   Vacc = 0.05; // volume of the accumulator 
+   Pgas = 10e5; // precharged gas pressure of the accumulator
+   Vgas = 0.01; // precharged gas volume
+   kgas = 1.8; // polytropic index of the gas
+
+   rho = 900; // density of the liquid
+	kleak = 0.1; // leakage factor of the relieve valves
+	Cd = 0.6; // discharge coefficient of the relieve valves 
+	PopenLP = 10e5; // low pressure line opening pressure of the relieve valve 
+	Qdp5LP = 2400; // low pressure line relieve valve flow at 5bar pressure drop
+	PopenHP = 300e5; // high pressure line opening pressure of the relieve valve 
+	Qdp5HP = 200; // high pressure line relieve valve flow at 5bar pressure drop 
+	
+   Dpipe = 0.05; // diameter of the pipe
+   Lpipe = 20; // total length of the pipe
+   visc = 3e-5; // viscosity of the liquid
+
+	kp = 100 {};			// Proportional gain
+	Ti = 2 {};		// Integral time constant Ti>0
+
+
+
+   implementation_end;
+      Splitter1 320 32
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 316.8 28.8 323.2 35.2 color -1 fill 0;
+         ellipse 315.7 27.7 324.3 36.3 color -1;
+        terminals
+         input 320 32 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+      Splitter2 40 120
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 36.8 116.8 43.2 123.2 color -1 fill 0;
+         ellipse 35.7 115.7 44.3 124.3 color -1;
+        terminals
+         input 40 120 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+      States 320 120
+       description '<Information><Description><Version>4.0</Version><LibraryPath>Template\Submodel-Equation.emx</LibraryPath><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><TimeStamp>2007-11-1 22:32:1</TimeStamp><AllowLibraryUpdate>False</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type 'output-Equation'
+        ports
+         signal in vload;
+         signal in yload;
+         signal in vdrum;
+         signal in Thydmotor;
+         signal in Tdrum;
+         signal in vheave;
+         signal in QpumpHP;
+         signal in QpumpLP;
+         signal in QvalveHP;
+         signal in QvalveLP;
+         signal in PHPpipe;
+         signal in QHPpipe;
+         signal in PaccHP;
+         signal in PaccLP;
+         signal in PLPpipe;
+         signal in QLPpipe;
+         signal in yloadGlobal;
+         signal in Fwire;
+       end;
+       implementation eq
+
+/* load velocity --- vload
+   load position --- yload
+   drum velocity --- vdrum
+   hydraulic motor torque --- Thydmotor
+   torque to drum --- Tdrum
+   heave motion velocity --- vheave
+   heave motion ---heave
+   high pressure pump flow rate ---QpumpHP
+   low pressure pump flow rate ---QpumpLP
+   high pressure line relieve valve flow rate ---QvalveHP
+   low pressure line relieve valve flow rate ---QvalveLP
+   high pressure line pressure ---PHPpipe
+   high pressure line flow rate ---QHPpipe
+   pressure after pump ---PLPpipe
+   pipe flow rate ---QLPpipe
+   high pressure line accumulator pressure ---PaccHP
+   low pressure line accumulator pressure ---PaccLPimplementation_end;
+      Winch 272 32
+       description '<Information><Description><Version>4.0</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>System\Mainmodel.emx</LibraryPath><TimeStamp>2007-9-27 10:23:12</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type winch
+        ports
+         signal in mload;
+         signal out vload;
+         signal out yload;
+         signal in rdrum;
+         signal in idrum;
+         signal in Vmmotor;
+         signal in nhydgear;
+         signal out vdrum;
+         signal in dwire;
+         signal in rfriction;
+         signal in nhydmotor;
+         signal in lwire;
+         signal in cdwire;
+         signal out Thydmotor;
+         signal out Tdrum;
+         signal in k;
+         signal in vHP;
+         signal in VmHP;
+         signal in pmaxHP;
+         signal in dpmaxHP;
+         signal in VmLP;
+         signal in vLP;
+         signal out QpumpHP;
+         signal out QpumpLP;
+         signal in bulkmodulus;
+         signal in Vacc;
+         signal in PopenLP;
+         signal in rho;
+         signal in kleak;
+         signal in Qdp5LP;
+         signal in Cd;
+         signal in PopenHP;
+         signal in Qdp5HP;
+         signal out QvalveHP;
+         signal out QvalveLP;
+         signal in Dpipe;
+         signal in Lpipe;
+         signal out QHPpipe;
+         signal in visc;
+         signal out PHPpipe;
+         signal out PaccHP;
+         signal out PaccLP;
+         signal in npumpHP;
+         signal out PLPpipe;
+         signal out QLPpipe;
+         signal in Pgas;
+         signal in Vgas;
+         signal in kgas;
+         signal in heave;
+         signal out yloadGlobal;
+         signal out Fwire;
+       end;
+       implementation bg
+        submodels
+         CHPAccumulator 472 352
+          description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\C.emx</LibraryPath><TimeStamp>2007-10-31 10:43:59</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type C
+           ports
+            power in p;
+            signal in bulkmodulus;
+            signal in Vacc;
+            signal out PaccHP;
+            signal in Pgas;
+            signal in Vgas;
+            signal in kgas;
+           restrictions
+            causality preferred out p;
+          end;
+          icon bg bottom
+           figures
+            text 'C' 472 352 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real dVpch, dV;
+
+equations
+	dVpch = Pgas * Vgas/bulkmodulus;
+	dV = max([0.0,int(p.f)]);
+	if dV < dVpch then 
+      p.e = bulkmodulus/Vacc*dV;
+   else 
+      p.e = Pgas*(Vgas/(Vgas+dVpch-dV))^kgas;
+   end;
+	PaccHP = p.e/100000;
+implementation_end;
+         CHPFlexibility 152 256
+          description '<Information><Description><LibraryPath>Bond Graph\C.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct><member><name>svgFilename</name><value><string></string></value></member></struct></value></member></struct></Configuration></Description></Information>';
+          type C
+           ports
+            power in p;
+            signal in bulkmodulus;
+            signal in Lpipe;
+            signal in Dpipe;
+            signal out PHPpipe;
+           restrictions
+            causality preferred out p;
+          end;
+          icon bg bottom
+           figures
+            text 'C' 152 256 color 0 18 bold;
+          end;
+          implementation eq
+variables
+   real Vpipe;
+   real dV;
+
+equations
+	Vpipe = pi*Dpipe^2/4*Lpipe;
+//integrate the flow in and out of the pipe to find the volume of fluid in the pipe
+	dV = max([0.0,int(p.f)]);
+//calculate the pressure in the physical volume given a volume of fluid
+	p.e = bulkmodulus/Vpipe*dV;
+	
+	PHPpipe = p.e/100000;
+implementation_end;
+         CLPAccumulator 472 56
+          description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\C.emx</LibraryPath><TimeStamp>2007-10-31 10:43:59</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type C
+           ports
+            power in p;
+            signal in bulkmodulus;
+            signal in Vacc;
+            signal out PaccLP;
+            signal in Vgas;
+            signal in Pgas;
+            signal in kgas;
+           restrictions
+            causality preferred out p;
+          end;
+          icon bg bottom
+           figures
+            text 'C' 472 56 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real dVpch, dV;
+
+equations
+	dVpch = Pgas * Vgas/bulkmodulus;
+	dV = max([0.0,int(p.f)]);
+	if dV < dVpch then 
+      p.e = bulkmodulus/Vacc*dV;
+   else 
+      p.e = Pgas*(Vgas/(Vgas+dVpch-dV))^kgas;
+   end;
+	PaccLP = p.e/100000;
+implementation_end;
+         CLPFlexibility 192 48
+          description '<Information><Description><LibraryPath>Bond Graph\C.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct><member><name>svgFilename</name><value><string></string></value></member></struct></value></member></struct></Configuration></Description></Information>';
+          type C
+           ports
+            power in p;
+            signal in bulkmodulus;
+            signal in Lpipe;
+            signal in Dpipe;
+            signal out PLPpipe;
+           restrictions
+            causality preferred out p;
+          end;
+          icon bg bottom
+           figures
+            text 'C' 192 48 color 0 18 bold;
+          end;
+          implementation eq
+variables
+   real Vpipe;
+   real dV;
+
+equations
+	Vpipe = pi*Dpipe^2/4*Lpipe;
+//integrate the flow in and out of the pipe to find the volume of fluid in the pipe
+	dV = max([0.0,int(p.f)]);
+//calculate the pressure in the physical volume given a volume of fluid
+	p.e = bulkmodulus/Vpipe*dV;
+	
+	PLPpipe = p.e/100000;
+implementation_end;
+         Cspring 792 128
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\C.emx</LibraryPath><TimeStamp>2011-11-29 15:58:35</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type C
+           ports
+            power in p;
+            signal in lwire;
+            signal in dwire;
+            signal out kwire;
+            signal in mload;
+           restrictions
+            causality preferred out p;
+          end;
+          icon bg bottom
+           figures
+            text 'C' 792 128 color 0 18 bold;
+          end;
+          implementation eq
+parameters
+	real Ewire = 85e9;
+	
+variables
+	real Awire, deltay0, deltay;
+	
+equations
+	Awire = 0.6*pi*dwire^2/4;
+	kwire = Ewire*Awire/lwire;
+	deltay0 = mload*g_n/kwire;
+	deltay = int(p.f,deltay0);
+   p.e = kwire*deltay;
+implementation_end;
+         Idrum 688 160
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\I.emx</LibraryPath><TimeStamp>2011-11-29 15:55:55</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type I
+           ports
+            power in p;
+            signal out vdrum;
+            signal in i;
+           restrictions
+            causality preferred in p;
+          end;
+          icon bg bottom
+           figures
+            text 'I' 688 160 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real angle, angledeg;
+equations
+   p.f = int(p.e) / i;
+   vdrum = p.f*180/pi;
+   angle = int(vdrum);
+   angledeg = angle*180/pi;
+implementation_end;
+         IHPInertia 280 256
+          description '<Information><Description><LibraryPath>Bond Graph\I.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct><member><name>svgFilename</name><value><string></string></value></member></struct></value></member></struct></Configuration></Description></Information>';
+          type I
+           ports
+            power in p;
+            signal in Dpipe;
+            signal in Lpipe;
+            signal out QHPpipe;
+            signal in rho;
+           restrictions
+            causality preferred in p;
+          end;
+          icon bg bottom
+           figures
+            text 'I' 280 256 color 0 18 bold;
+          end;
+          implementation eq
+variables
+   real Apipe; 
+
+equations
+//calculate pipe cross section area	
+   Apipe = pi*Dpipe^2/4;
+
+//calculate frow rate	
+   p.f = Apipe/Lpipe*rho * int(p.e);
+
+   QHPpipe = p.f*60e3;//flow in l/min for plotting
+implementation_end;
+         Iload 888 160
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\I.emx</LibraryPath><TimeStamp>2011-11-29 15:55:55</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type I
+           ports
+            power in p;
+            signal in mload;
+            signal out yload;
+            signal out vload;
+            signal out yloadGlobal;
+            signal in heave;
+           restrictions
+            causality preferred in p;
+          end;
+          icon bg bottom
+           figures
+            text 'I' 888 160 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real pload;
+equations
+	 pload = int(p.e); // momentum
+    p.f = pload / mload; 
+    vload = p.f; // velocity
+    yload = int(p.f); // diaplacement
+    yloadGlobal = heave+yload;implementation_end;
+         ILPInertia 272 56
+          description '<Information><Description><LibraryPath>Bond Graph\I.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct><member><name>svgFilename</name><value><string></string></value></member></struct></value></member></struct></Configuration></Description></Information>';
+          type I
+           ports
+            power in p;
+            signal in Dpipe;
+            signal in Lpipe;
+            signal out QLPpipe;
+            signal in rho;
+           restrictions
+            causality preferred in p;
+          end;
+          icon bg bottom
+           figures
+            text 'I' 272 56 color 0 18 bold;
+          end;
+          implementation eq
+variables
+   real Apipe; 
+
+equations
+//calculate pipe cross section area	
+   Apipe = pi*Dpipe^2/4;
+
+//calculate frow rate	
+   p.f = Apipe/Lpipe*rho * int(p.e);
+
+   QLPpipe = p.f*60e3;//flow in l/min for plotting
+implementation_end;
+         MTFhmotor 584 208
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\TF.emx</LibraryPath><TimeStamp>2011-11-29 16:43:47</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type MTF
+           ports
+            power in p1;
+            power out p2;
+            signal in Vm;
+            signal out Thydmotor;
+            signal in nhydmotor;
+            signal in k;
+           restrictions
+            causality constraint not_equal p1 p2;
+          end;
+          icon bg bottom
+           figures
+            text 'MTF' 584 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	p2.e = k * nhydmotor * Vm /(2*pi) * p1.e;
+	p1.f = k * Vm /(2*pi) * p2.f;
+	Thydmotor = p2.e/nhydmotor/1000;
+implementation_end;
+         plug nhydmotor 544 160;
+         plug lwire 760.5 88;
+         plug cdwire 816 104;
+         plug Thydmotor 624.1 247.9;
+         plug Tdrum 776 248;
+         plug k 544.1 143.9;
+         plug vHP 48 240;
+         plug VmHP 48 223.9;
+         plug pmaxHP 48 272;
+         plug dpmaxHP 47.8 256;
+         plug VmLP 56 64;
+         plug vLP 56 80.1;
+         plug QpumpHP 136 328;
+         plug QpumpLP 128 144;
+         plug bulkmodulus 112.1 184;
+         plug Vacc 408 48;
+         plug PopenLP 328 120;
+         plug rho 192 192;
+         plug kleak 336 223.9;
+         plug Qdp5LP 328 136;
+         plug rfriction 663.9 303.9;
+         plug PopenHP 336 240;
+         plug Qdp5HP 328 264;
+         plug QvalveHP 424 136;
+         plug QvalveLP 408 296;
+         plug Dpipe 120 216;
+         plug Lpipe 120.2 232;
+         plug QHPpipe 320 296;
+         plug visc 192 168;
+         plug PHPpipe 207.9 296;
+         plug PaccHP 536 328;
+         plug PaccLP 536 88;
+         plug npumpHP 48 208;
+         plug PLPpipe 248 88;
+         plug QLPpipe 335.9 88;
+         plug Pgas 408 80.1;
+         plug Vgas 408 64;
+         plug kgas 408 95.9;
+         plug heave 888.1 128;
+         plug yloadGlobal 960 200;
+         plug Fwire 823.9 240;
+         plug mload 848.2 303.9;
+         plug dwire 760 103.9;
+         plug vdrum 735.8 160;
+         plug nhydgear 640 168;
+         plug Vmmotor 544.1 176;
+         plug idrum 655.9 136.1;
+         plug rdrum 744 175.9;
+         plug yload 944 184;
+         plug vload 944 160;
+         plug Cd 336 207.9;
+         OneJunction 888 208
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 888 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction1 688 208
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 688 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction2 824 168
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 824 168 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction3 272 104
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 272 104 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction4 472 160
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 472 160 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction5 472 264
+          description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2007-9-27 9:51:18</TimeStamp>
+</Description>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 472 264 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction6 248 304
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 248 304 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         OneJunction8 512 208
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+          knot OneJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out flow [1];
+           restrictions
+            causality constraint one_out p;
+          end;
+          icon bg
+           figures
+            text '1' 512 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+         Rdamping 848 128
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type R
+           ports
+            power in p;
+            signal in kwire;
+            signal in cdwire;
+            signal in mload;
+          end;
+          icon bg bottom
+           figures
+            text 'R' 848 128 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real c;
+equations
+   c = 2*(kwire*mload)^0.5;
+	p.e = c * cdwire * p.f;
+implementation_end;
+         Rfriction 688 256
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type R
+           ports
+            power in p;
+            signal in r;
+            signal in m;
+          end;
+          icon bg bottom
+           figures
+            text 'R' 688 256 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	p.e = r * m*g_n;
+implementation_end;
+         RHPFriction 224 256
+          description '<Information><Description><LibraryPath>Bond Graph\R.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct><member><name>svgFilename</name><value><string></string></value></member></struct></value></member></struct></Configuration></Description></Information>';
+          type R
+           ports
+            power in p;
+            signal in Lpipe;
+            signal in Dpipe;
+            signal in rho;
+            signal in visc;
+          end;
+          icon bg bottom
+           figures
+            text 'R' 224 256 color 0 18 bold;
+          end;
+          implementation eq
+variables
+   real Apipe;//pipe cross section area
+   real f;//fluid friction factor
+   real Re;//Renold number
+
+equations
+//calculate pipe cross section area
+   Apipe = pi*Dpipe^2/4; 
+//calculate fluid Reynolds number
+   Re = abs(p.f)/Apipe*Dpipe/visc;
+
+   if Re < 0.0001 then
+      f = 0;//avoid division by zero
+   else if Re < 2300 then 
+           f = 64/Re; //friction factor for laminar flow
+        else 
+           f = 0.316/(Re^0.25);//friction factor for turbulent flow
+        end;
+   end;
+
+   if abs(p.f) < 0.001 then
+      p.e = 0;//avoid division by zero
+   else
+   	p.e = f*0.5*rho*Lpipe/Dpipe*(p.f/Apipe)^2*sign(p.f);//friction loss through pipe
+   end;
+implementation_end;
+         RHPLineReliefValve 368 264
+          description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2007-9-25 12:3:18</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type R
+           ports
+            power in p;
+            signal in rho;
+            signal in Cd;
+            signal in PopenHP;
+            signal in Qdp5HP;
+            signal in kleak;
+            signal out QvalveHP;
+          end;
+          icon bg bottom
+           figures
+            text 'R' 368 264 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real Avalve, leakage;
+
+equations		
+// Valve flow area calculated from flow at 5 bar pressure drop
+	Avalve = (Qdp5HP/60e3)/(sqrt(2*5e5/rho));
+	leakage = kleak*Avalve*Cd*sqrt(2/(rho*PopenHP))*PopenHP;
+				
+	if p.e>PopenHP then
+		p.f = Avalve*Cd*sqrt(2/(rho*(p.e - PopenHP)))*(p.e - PopenHP) + leakage;
+	else
+		if p.e>0 then
+			p.f = kleak*Avalve*Cd*sqrt(2/(rho*p.e))*p.e;
+		else
+			p.f = 0;
+		end;
+	end;
+
+	QvalveHP = p.f*60e3;implementation_end;
+         RLPFriction 272 144
+          description '<Information><Description><LibraryPath>Bond Graph\R.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct><member><name>svgFilename</name><value><string></string></value></member></struct></value></member></struct></Configuration></Description></Information>';
+          type R
+           ports
+            power in p;
+            signal in Lpipe;
+            signal in Dpipe;
+            signal in rho;
+            signal in visc;
+          end;
+          icon bg bottom
+           figures
+            text 'R' 272 144 color 0 18 bold;
+          end;
+          implementation eq
+variables
+   real Apipe;//pipe cross section area
+   real f;//fluid friction factor
+   real Re;//Renold number
+
+equations
+//calculate pipe cross section area
+   Apipe = pi*Dpipe^2/4; 
+//calculate fluid Reynolds number
+   Re = abs(p.f)/Apipe*Dpipe/visc;
+
+   if Re < 0.0001 then
+      f = 0;//avoid division by zero
+   else if Re < 2300 then 
+           f = 64/Re; //friction factor for laminar flow
+        else 
+           f = 0.316/(Re^0.25);//friction factor for turbulent flow
+        end;
+   end;
+
+   if abs(p.f) < 0.001 then
+      p.e = 0;//avoid division by zero
+   else
+   	p.e = f*0.5*rho*Lpipe/Dpipe*(p.f/Apipe)^2*sign(p.f);//friction loss through pipe
+   end;
+implementation_end;
+         RLPLineReliefValve 368 160
+          description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2007-9-25 12:3:18</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type R
+           ports
+            power in p;
+            signal in rho;
+            signal in Cd;
+            signal in PopenLP;
+            signal in Qdp5LP;
+            signal in kleak;
+            signal out QvalveLP;
+          end;
+          icon bg bottom
+           figures
+            text 'R' 368 160 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real Avalve, leakage;
+
+equations		
+	// Valve flow area calculated from flow at 5 bar pressure drop
+	Avalve = (Qdp5LP/60e3)/(sqrt(2*5e5/rho));
+	leakage = kleak*Avalve*Cd*sqrt(2/(rho*PopenLP))*PopenLP;
+			
+	if p.e>PopenLP then
+		p.f = Avalve*Cd*sqrt(2/(rho*(p.e - PopenLP)))*(p.e - PopenLP) + leakage;
+	else
+		if p.e>0 then
+			p.f = kleak*Avalve*Cd*sqrt(2/(rho*p.e))*p.e;
+		else
+			p.f = 0;
+		end;
+	end;
+
+	QvalveLP = p.f*60e3;implementation_end;
+         SeDrainTank 408 208
+          description '<Information><Description><LibraryPath>Bond Graph\Se.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type Se
+           ports
+            power out p;
+           restrictions
+            causality fixed out p;
+          end;
+          icon bg bottom
+           figures
+            text 'Se' 408 208 color 0 18 bold;
+          end;
+          implementation eq
+parameters
+	real returnPressure = 0;
+
+variables
+	real flow {l/min};
+	real pressure {bar};
+
+equations
+	p.e = returnPressure;
+	flow = p.f;
+	pressure = p.e;implementation_end;
+         Seload 888 256
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\Se.emx</LibraryPath><TimeStamp>2011-11-29 16:36:49</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type Se
+           ports
+            power out p;
+            signal in mload;
+           restrictions
+            causality fixed out p;
+          end;
+          icon bg bottom
+           figures
+            text 'Se' 888 256 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real vload;
+equations
+	p.e = -mload*g_n;
+	vload = p.f;
+implementation_end;
+         SfHPPump 88 304
+          description '<Information><Description><LibraryPath>Bond Graph\MSf.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type MSf
+           ports
+            power out p;
+            signal in VmHP;
+            signal in pmaxHP;
+            signal in vHP;
+            signal out QpumpHP;
+            signal in dpmaxHP;
+            signal in npumpHP;
+           restrictions
+            causality fixed in p;
+          end;
+          icon bg top
+           figures
+            text 'MSf' 88 304 color 0 18 bold;
+          end;
+          implementation eq
+variables
+	real HPMaxFlow;
+
+equations
+// Calculating maximum flow from pumps
+	HPMaxFlow = VmHP/(2.0*pi)*vHP/60.0*2*pi;
+	
+// Pump flow proportional to (Pset - P) when Pset>P
+	if p.e > pmaxHP then
+		p.f = 0.0;
+	else
+// Limit flow between 0 and 100% of max flow
+		p.f = npumpHP*min([1.0, (pmaxHP - p.e)/dpmaxHP])*HPMaxFlow;
+	end;
+	
+//Calculating flow in l/min and pressure in bar for plotting purposes
+	QpumpHP = p.f/npumpHP*60e3;implementation_end;
+         SfLPPump 88 104
+          description '<Information><Description><LibraryPath>Bond Graph\MSf.emx</LibraryPath><Version>No Version Info</Version><IsMainModel>0</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type MSf
+           ports
+            power out p;
+            signal in VmLP;
+            signal in vLP;
+            signal out QpumpLP;
+           restrictions
+            causality fixed in p;
+          end;
+          icon bg bottom
+           figures
+            text 'MSf' 88 104 color 0 18 bold;
+          end;
+          implementation eq
+equations
+// Calculating maximum flow from pumps
+	p.f = VmLP/(2*pi)*vLP/60.0*2*pi;
+
+//Calculating flow in l/min and pressure in bar for plotting purposes
+	QpumpLP = p.f*60e3;implementation_end;
+         Splitter1 848 256
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 844.8 252.8 851.2 259.2 color -1 fill 0;
+            ellipse 843.7 251.7 852.3 260.3 color -1;
+           terminals
+            input 848 256 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter10 280 192
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 276.8 188.8 283.2 195.2 color -1 fill 0;
+            ellipse 275.7 187.7 284.3 196.3 color -1;
+           terminals
+            input 280 192 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter11 224 216
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 220.8 212.8 227.2 219.2 color -1 fill 0;
+            ellipse 219.7 211.7 228.3 220.3 color -1;
+           terminals
+            input 224 216 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter12 224 232
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 220.8 228.8 227.2 235.2 color -1 fill 0;
+            ellipse 219.7 227.7 228.3 236.3 color -1;
+           terminals
+            input 224 232 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter13 224 192
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 220.8 188.8 227.2 195.2 color -1 fill 0;
+            ellipse 219.7 187.7 228.3 196.3 color -1;
+           terminals
+            input 224 192 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter14 152 232
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 148.8 228.8 155.2 235.2 color -1 fill 0;
+            ellipse 147.7 227.7 156.3 236.3 color -1;
+           terminals
+            input 152 232 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter15 152 216
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 148.8 212.8 155.2 219.2 color -1 fill 0;
+            ellipse 147.7 211.7 156.3 220.3 color -1;
+           terminals
+            input 152 216 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter16 152 184
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 148.8 180.8 155.2 187.2 color -1 fill 0;
+            ellipse 147.7 179.7 156.3 188.3 color -1;
+           terminals
+            input 152 184 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter21 224 168
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 220.8 164.8 227.2 171.2 color -1 fill 0;
+            ellipse 219.7 163.7 228.3 172.3 color -1;
+           terminals
+            input 224 168 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter23 440 32
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 436.8 28.8 443.2 35.2 color -1 fill 0;
+            ellipse 435.7 27.7 444.3 36.3 color -1;
+           terminals
+            input 440 32 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter24 440 32
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 436.8 28.8 443.2 35.2 color -1 fill 0;
+            ellipse 435.7 27.7 444.3 36.3 color -1;
+           terminals
+            input 440 32 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter25 440 32
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 436.8 28.8 443.2 35.2 color -1 fill 0;
+            ellipse 435.7 27.7 444.3 36.3 color -1;
+           terminals
+            input 440 32 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter5 440 32
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 436.8 28.8 443.2 35.2 color -1 fill 0;
+            ellipse 435.7 27.7 444.3 36.3 color -1;
+           terminals
+            input 440 32 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter6 440 32
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 436.8 28.8 443.2 35.2 color -1 fill 0;
+            ellipse 435.7 27.7 444.3 36.3 color -1;
+           terminals
+            input 440 32 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter7 368 192
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 364.8 188.8 371.2 195.2 color -1 fill 0;
+            ellipse 363.7 187.7 372.3 196.3 color -1;
+           terminals
+            input 368 192 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter8 368 208
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 364.8 204.8 371.2 211.2 color -1 fill 0;
+            ellipse 363.7 203.7 372.3 212.3 color -1;
+           terminals
+            input 368 208 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         Splitter9 368 224
+          description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+          knot Splitter
+           ports
+            signal knot duplicatable out output [1];
+            signal knot in input [1];
+          end;
+          icon bg ellipse
+           figures
+            ellipse 364.8 220.8 371.2 227.2 color -1 fill 0;
+            ellipse 363.7 219.7 372.3 228.3 color -1;
+           terminals
+            input 368 224 fixed;
+          end;
+          implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+         TFdrum 744 208
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\TF.emx</LibraryPath><TimeStamp>2011-11-29 16:43:47</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type TF
+           ports
+            power in p1;
+            power out p2;
+            signal in r;
+            signal out Tdrum;
+           restrictions
+            causality constraint not_equal p1 p2;
+          end;
+          icon bg bottom
+           figures
+            text 'TF' 744 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	p1.e = r * p2.e;
+	p2.f = r * p1.f;
+	Tdrum = p1.e/1000;
+implementation_end;
+         TFhgear 640 208
+          description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\TF.emx</LibraryPath><TimeStamp>2011-11-29 16:43:47</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+          type TF
+           ports
+            power in p1;
+            power out p2;
+            signal in nhydgear;
+           restrictions
+            causality constraint not_equal p1 p2;
+          end;
+          icon bg bottom
+           figures
+            text 'TF' 640 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	p1.e = p2.e/nhydgear;
+	p2.f = p1.f/nhydgear;
+implementation_end;
+         ZeroJunction 824 208
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+          knot ZeroJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out effort [1];
+           restrictions
+            causality constraint one_in p;
+          end;
+          icon bg
+           figures
+            text '0' 824 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e)/1000;
+implementation_end;
+         ZeroJunction1 192 104
+          description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2007-9-27 9:51:43</TimeStamp>
+</Description>';
+          knot ZeroJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out effort [1];
+           restrictions
+            causality constraint one_in p;
+          end;
+          icon bg
+           figures
+            text '0' 192 104 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+    implementation_end;
+         ZeroJunction2 152 304
+          description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2007-9-27 9:51:43</TimeStamp>
+</Description>';
+          knot ZeroJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out effort [1];
+           restrictions
+            causality constraint one_in p;
+          end;
+          icon bg
+           figures
+            text '0' 152 304 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+    implementation_end;
+         ZeroJunction5 472 208
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+          knot ZeroJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out effort [1];
+           restrictions
+            causality constraint one_in p;
+          end;
+          icon bg
+           figures
+            text '0' 472 208 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+implementation_end;
+         ZeroJunction6 472 104
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+          knot ZeroJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out effort [1];
+           restrictions
+            causality constraint one_in p;
+          end;
+          icon bg
+           figures
+            text '0' 472 104 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+implementation_end;
+         ZeroJunction7 472 304
+          description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+          knot ZeroJunction
+           ports
+            power knot duplicatable none p [1];
+            signal knot out effort [1];
+           restrictions
+            causality constraint one_in p;
+          end;
+          icon bg
+           figures
+            text '0' 472 304 color 0 18 bold;
+          end;
+          implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+implementation_end;
+        end;
+        connections
+         bulkmodulus -> Splitter16\input;
+         Cd -> Splitter8\input;
+         cdwire -> Rdamping\cdwire 848 104;
+         CHPAccumulator\p <= ZeroJunction7\p;
+         CHPFlexibility\Lpipe <- Splitter14\output;
+         CLPAccumulator\PaccLP -> PaccLP 496 88;
+         CLPFlexibility\PLPpipe -> PLPpipe 208 88;
+         Cspring\kwire -> Rdamping\kwire;
+         Dpipe -> Splitter15\input;
+         dpmaxHP -> SfHPPump\dpmaxHP 88 256;
+         dwire -> Cspring\dwire 792 104;
+         heave -> Iload\heave;
+         idrum -> Idrum\i 688 136;
+         Idrum\vdrum -> vdrum;
+         Iload\vload -> vload;
+         Iload\yload -> yload 912 184;
+         Iload\yloadGlobal -> yloadGlobal 912 200;
+         ILPInertia\QLPpipe -> QLPpipe 296 88;
+         k -> MTFhmotor\k 584 144;
+         kgas -> Splitter24\input 440 96;
+         kleak -> Splitter9\input;
+         Lpipe -> Splitter14\input;
+         lwire -> Cspring\lwire 792 88;
+         mload -> Splitter1\input;
+         MTFhmotor\p2 => TFhgear\p1;
+         MTFhmotor\Thydmotor -> Thydmotor 584 248;
+         nhydgear -> TFhgear\nhydgear;
+         nhydmotor -> MTFhmotor\nhydmotor 584 160;
+         npumpHP -> SfHPPump\npumpHP 88 208;
+         OneJunction\p => Iload\p;
+         OneJunction1\p => Idrum\p;
+         OneJunction1\p => Rfriction\p;
+         OneJunction1\p => TFdrum\p1;
+         OneJunction2\p => Cspring\p;
+         OneJunction2\p => Rdamping\p;
+         OneJunction3\p => ILPInertia\p;
+         OneJunction3\p => RLPFriction\p;
+         OneJunction3\p => ZeroJunction6\p;
+         OneJunction4\p => RLPLineReliefValve\p;
+         OneJunction4\p => ZeroJunction5\p;
+         OneJunction5\p => RHPLineReliefValve\p;
+         OneJunction5\p => ZeroJunction5\p;
+         OneJunction6\p => IHPInertia\p;
+         OneJunction6\p => RHPFriction\p;
+         OneJunction6\p => ZeroJunction7\p;
+         OneJunction8\p => MTFhmotor\p1;
+         OneJunction8\p => ZeroJunction6\p 512 104;
+         PaccHP <- CHPAccumulator\PaccHP 496 328;
+         Pgas -> Splitter23\input 440 80;
+         PHPpipe <- CHPFlexibility\PHPpipe 168 296;
+         pmaxHP -> SfHPPump\pmaxHP 88 272;
+         PopenHP -> RHPLineReliefValve\PopenHP;
+         Qdp5HP -> RHPLineReliefValve\Qdp5HP;
+         QHPpipe <- IHPInertia\QHPpipe 280 296;
+         QvalveHP <- RLPLineReliefValve\QvalveLP 384 136;
+         QvalveLP <- RHPLineReliefValve\QvalveHP 368 296;
+         rdrum -> TFdrum\r;
+         rfriction -> Rfriction\r 664 256;
+         rho -> Splitter13\input;
+         RLPLineReliefValve\PopenLP <- PopenLP 368 120;
+         RLPLineReliefValve\Qdp5LP <- Qdp5LP 368 136;
+         Seload\p => OneJunction\p;
+         SfHPPump\p => ZeroJunction2\p;
+         SfHPPump\QpumpHP -> QpumpHP 88 328;
+         SfLPPump\p => ZeroJunction1\p;
+         SfLPPump\QpumpLP -> QpumpLP 88 144;
+         Splitter1\output -> Cspring\mload 792 256 792 184;
+         Splitter1\output -> Iload\mload 848 160;
+         Splitter1\output -> Rdamping\mload;
+         Splitter1\output -> Rfriction\m 848 280 664 280 664 256;
+         Splitter1\output -> Seload\mload;
+         Splitter10\output -> IHPInertia\rho;
+         Splitter10\output -> Splitter7\input 296 192;
+         Splitter11\output -> IHPInertia\Dpipe 280 216;
+         Splitter11\output -> RHPFriction\Dpipe;
+         Splitter12\output -> IHPInertia\Lpipe 280 232;
+         Splitter12\output -> RHPFriction\Lpipe;
+         Splitter13\output -> ILPInertia\rho 224 32 272 32;
+         Splitter13\output -> RHPFriction\rho;
+         Splitter13\output -> RLPFriction\rho 224 144;
+         Splitter13\output -> Splitter10\input;
+         Splitter14\output -> CLPFlexibility\Lpipe 152 48;
+         Splitter14\output -> ILPInertia\Lpipe 152 32 272 32;
+         Splitter14\output -> RLPFriction\Lpipe 152 144;
+         Splitter14\output -> Splitter12\input;
+         Splitter15\output -> CHPFlexibility\Dpipe;
+         Splitter15\output -> CLPFlexibility\Dpipe 152 48;
+         Splitter15\output -> ILPInertia\Dpipe 152 32 272 32;
+         Splitter15\output -> RLPFriction\Dpipe 152 144;
+         Splitter15\output -> Splitter11\input;
+         Splitter16\output -> CHPFlexibility\bulkmodulus;
+         Splitter16\output -> CLPFlexibility\bulkmodulus 152 48;
+         Splitter16\output -> Splitter6\input 152 32;
+         Splitter21\output -> RHPFriction\visc;
+         Splitter21\output -> RLPFriction\visc 224 144;
+         Splitter23\output -> CHPAccumulator\Pgas 440 352;
+         Splitter23\output -> CLPAccumulator\Pgas 440 32 472 32;
+         Splitter24\output -> CHPAccumulator\kgas 440 352;
+         Splitter24\output -> CLPAccumulator\kgas 472 32;
+         Splitter25\output -> CHPAccumulator\Vgas 440 352;
+         Splitter25\output -> CLPAccumulator\Vgas 472 32;
+         Splitter5\output -> CHPAccumulator\Vacc 440 352;
+         Splitter5\output -> CLPAccumulator\Vacc 440 32 472 32;
+         Splitter6\output -> CHPAccumulator\bulkmodulus 440 352;
+         Splitter6\output -> CLPAccumulator\bulkmodulus 472 32;
+         Splitter7\output -> RHPLineReliefValve\rho;
+         Splitter7\output -> RLPLineReliefValve\rho 368 192;
+         Splitter8\output -> RHPLineReliefValve\Cd;
+         Splitter8\output -> RLPLineReliefValve\Cd 368 208;
+         Splitter9\output -> RHPLineReliefValve\kleak 368 248;
+         Splitter9\output -> RLPLineReliefValve\kleak 368 224;
+         TFdrum\p2 => ZeroJunction\p;
+         TFdrum\Tdrum -> Tdrum 744 248;
+         TFhgear\p2 => OneJunction1\p;
+         Vacc -> Splitter5\input 440 48;
+         Vgas -> Splitter25\input 440 64;
+         vHP -> SfHPPump\vHP 88 240;
+         visc -> Splitter21\input;
+         vLP -> SfLPPump\vLP 88 80;
+         VmHP -> SfHPPump\VmHP 88 224;
+         VmLP -> SfLPPump\VmLP 88 64;
+         Vmmotor -> MTFhmotor\Vm 584 176;
+         ZeroJunction\effort -> Fwire 824 232;
+         ZeroJunction\p => OneJunction\p;
+         ZeroJunction\p => OneJunction2\p;
+         ZeroJunction1\p => CLPFlexibility\p;
+         ZeroJunction1\p => OneJunction3\p;
+         ZeroJunction2\p => CHPFlexibility\p;
+         ZeroJunction2\p => OneJunction6\p;
+         ZeroJunction5\p <= SeDrainTank\p;
+         ZeroJunction6\p => CLPAccumulator\p;
+         ZeroJunction6\p => OneJunction4\p;
+         ZeroJunction7\p => OneJunction5\p;
+         ZeroJunction7\p => OneJunction8\p 512 304;
+        end;
+        figures
+         rectangle 304 112 424 184 color 16711680;
+         rectangle 308 234 428 310 color 16711680;
+         rectangle 376 192 488 232 color 16711680;
+         rectangle 672 144 768 288 color 16711680;
+         rectangle 864 120 960 280 color 16711680;
+         rectangle 776 80 856 248 color 16711680;
+         rectangle 504 136 656 280 color 16711680;
+         rectangle 436 296 556 376 color 16711680;
+         rectangle 384 40 560 120 color 16711680;
+         rectangle 24 200 112 336 color 16711680;
+         rectangle 40 40 120 152 color 16711680;
+         rectangle 164 36 296 168 color 16711680;
+         text '1' 40 320 color 16711680 16 bold;
+         rectangle 120 240 304 312 color 16711680;
+         text '2' 208 328 color 16711680 16 bold;
+         text '3' 360 328 color 16711680 16 bold;
+         text '4' 536 360 color 16711680 16 bold;
+         text '5' 560 272 color 16711680 16 bold;
+         text '6' 720 128 color 16711680 16 bold;
+         text '7' 816 64 color 16711680 16 bold;
+         text '8' 912 104 color 16711680 16 bold;
+         text '9' 24 136 color 16711680 16 bold;
+         text '10' 208 128 color 16711680 16 bold;
+         text '11' 320 160 color 16711680 16 bold;
+         text '12' 536 56 color 16711680 16 bold;
+         text '13' 456 184 color 16711680 16 bold;
+       implementation_end;
+     end;
+     connections
+      Heave\vheave -> Splitter2\input;
+      HydController\displacementGain -> Winch\k 272 184;
+      HydController\heave -> Winch\heave 272 184;
+      Parameters\bulkmodulus -> Winch\bulkmodulus;
+      Parameters\Cd -> Winch\Cd;
+      Parameters\cdwire -> Winch\cdwire;
+      Parameters\Dpipe -> Winch\Dpipe;
+      Parameters\dpmaxHP -> Winch\dpmaxHP;
+      Parameters\dwire -> Winch\dwire;
+      Parameters\idrum -> Winch\idrum;
+      Parameters\kgas -> Winch\kgas;
+      Parameters\kleak -> Winch\kleak;
+      Parameters\kp -> HydController\kp;
+      Parameters\Lpipe -> Winch\Lpipe;
+      Parameters\lwire -> Winch\lwire;
+      Parameters\mload -> Winch\mload;
+      Parameters\nhydgear -> Winch\nhydgear;
+      Parameters\nhydmotor -> Winch\nhydmotor;
+      Parameters\npumpHP -> Winch\npumpHP;
+      Parameters\Pgas -> Winch\Pgas;
+      Parameters\pmaxHP -> Winch\pmaxHP;
+      Parameters\PopenHP -> Winch\PopenHP;
+      Parameters\PopenLP -> Winch\PopenLP;
+      Parameters\Qdp5HP -> Winch\Qdp5HP;
+      Parameters\Qdp5LP -> Winch\Qdp5LP;
+      Parameters\rdrum -> Winch\rdrum;
+      Parameters\rfriction -> Winch\rfriction;
+      Parameters\rho -> Winch\rho;
+      Parameters\Ti -> HydController\Ti;
+      Parameters\Vacc -> Winch\Vacc;
+      Parameters\Vgas -> Winch\Vgas;
+      Parameters\vHP -> Winch\vHP;
+      Parameters\visc -> Winch\visc;
+      Parameters\vLP -> Winch\vLP;
+      Parameters\VmHP -> Winch\VmHP;
+      Parameters\VmLP -> Winch\VmLP;
+      Parameters\Vmmotor -> Winch\Vmmotor;
+      Splitter1\output -> HydController\vload 360 32 360 224 40 224 40 192;
+      Splitter1\output -> States\vload 320 80;
+      Splitter2\output -> HydController\vheave 40 176;
+      Splitter2\output -> States\vheave;
+      Winch\Fwire -> States\Fwire 320 32;
+      Winch\PaccHP -> States\PaccHP 320 32;
+      Winch\PaccLP -> States\PaccLP 320 32;
+      Winch\PHPpipe -> States\PHPpipe 320 32;
+      Winch\PLPpipe -> States\PLPpipe 320 32;
+      Winch\QHPpipe -> States\QHPpipe 320 32;
+      Winch\QLPpipe -> States\QLPpipe 320 32;
+      Winch\QpumpHP -> States\QpumpHP 320 32;
+      Winch\QpumpLP -> States\QpumpLP 320 32;
+      Winch\QvalveHP -> States\QvalveHP 320 32;
+      Winch\QvalveLP -> States\QvalveLP 320 32;
+      Winch\Tdrum -> States\Tdrum 320 32;
+      Winch\Thydmotor -> States\Thydmotor 320 32;
+      Winch\vdrum -> States\vdrum 320 32;
+      Winch\vload -> Splitter1\input;
+      Winch\yload -> States\yload 320 32;
+      Winch\yloadGlobal -> States\yloadGlobal 320 32;
+     end;
+     figures
+      text 'vheave' 64 144 color 0 16;
+      text 'vload' 208 216 color 0 16;
+      text 'Hyd motor 
+displacement gain' 192 168 color 0 16;
+      text 'winch
+parameters' 192 16 color 0 16;
+      text 'PI controller
+parameters' 136 88 color 0 16;
+      text 'yheave' 160 112 color 0 16;
+    implementation_end;
+  end;
+  connections
+  end;
+ implementation_end;
+]]>
+</Sidops>
+ </Model>
+ <Experiments>
+     <DefaultExperiment><![CDATA[Experiment 1]]>
+</DefaultExperiment>
+  <Experiment>
+    <Name>Experiment 1</Name>
+    <CreatedBy></CreatedBy>
+    <Info></Info>
+<ExpData>
+  <VersionNumber>4.7</VersionNumber>
+  <ModelProperties>
+    <ModelProperty section="CCodeDialog" entry="SubmodelName" value="model\winch"/>
+    <ModelProperty section="CCodeDialog" entry="TargetName" value="FMU 2.0 export for 20-sim submodel"/>
+    <ModelProperty section="CCodeDialog" entry="TargetDirectory" value="c:\temp\%SUBMODEL_NAME%"/>
+  </ModelProperties>
+  <Variables>
+   <Parameters>
+   </Parameters>
+   <Initials>
+    <Variable>
+     <Name>model\Controller\error_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Controller\heave_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Heave\heave_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\CHPAccumulator\p.f_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\CHPFlexibility\p.f_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\CLPAccumulator\p.f_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\CLPFlexibility\p.f_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\Cspring\deltay0</Name>
+     <Value>18.2722674268364</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\Idrum\angle_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\Idrum\p.e_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\IHPInertia\p.e_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\Iload\pload_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\Iload\yload_initial</Name>
+     <Value>0</Value>
+    </Variable>
+    <Variable>
+     <Name>model\Winch\ILPInertia\p.e_int_initial</Name>
+     <Value>0</Value>
+    </Variable>
+   </Initials>
+  </Variables>
+  <PlotSpecs>
+   <VarNames>
+    <VarName>time</VarName>
+    <VarName>model\States\vdrum</VarName>
+    <VarName>model\States\vload</VarName>
+    <VarName>model\Winch\Idrum\angle</VarName>
+    <VarName>model\States\Tdrum</VarName>
+    <VarName>model\States\yload</VarName>
+    <VarName>model\States\Thydmotor</VarName>
+    <VarName>model\Winch\Idrum\angledeg</VarName>
+    <VarName>model\Heave\heave</VarName>
+    <VarName>model\States\PaccHP</VarName>
+    <VarName>model\States\PaccLP</VarName>
+    <VarName>model\States\QvalveHP</VarName>
+    <VarName>model\States\QvalveLP</VarName>
+    <VarName>model\States\QLPpipe</VarName>
+    <VarName>model\States\QHPpipe</VarName>
+    <VarName>model\States\PLPpipe</VarName>
+    <VarName>model\States\PHPpipe</VarName>
+    <VarName>model\States\QpumpHP</VarName>
+    <VarName>model\States\QpumpLP</VarName>
+    <VarName>model\Heave\vheave</VarName>
+    <VarName>model\States\yloadGlobal</VarName>
+    <VarName>model\States\heave</VarName>
+   </VarNames>
+   <Plots>
+    <Plot>
+     <PlotType>D3DPlot</PlotType>
+     <BasePlot>
+       <PlotId>1</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>false</PlotIsVisible>
+     </BasePlot>
+     <PlotTitle>3D Animation</PlotTitle>
+     <RenderQuality>137</RenderQuality>
+     <ShowGrid>true</ShowGrid>
+     <ShowFPS>false</ShowFPS>
+     <BackgroundColor>4294967295</BackgroundColor>
+     <SceneBackgroundImage>Gradients\BlueWhite.png</SceneBackgroundImage>
+     <ApplyTextureBackground>true</ApplyTextureBackground>
+     <FrameScale>1</FrameScale>
+     <FrameThickness>1</FrameThickness>
+     <MainFrame>
+      <Frame>
+       <ScaleValue>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </ScaleValue>
+       <ShowReferenceFrame>true</ShowReferenceFrame>
+       <Name>Reference Frame</Name>
+       <Position>
+       </Position>
+       <Orientation>
+        <Angles>
+        </Angles>
+        <OrientationType>Bryant</OrientationType>
+       </Orientation>
+       <LockX>false</LockX>
+       <LockY>false</LockY>
+       <LockZ>false</LockZ>
+       <LockXPitch>false</LockXPitch>
+       <LockYYaw>false</LockYYaw>
+       <LockZRoll>false</LockZRoll>
+       <Childs>
+        <Frame>
+         <ScaleValue>
+     <X>
+      <Value>1</Value>
+     </X>
+     <Y>
+      <Value>1</Value>
+     </Y>
+     <Z>
+      <Value>1</Value>
+     </Z>
+         </ScaleValue>
+         <ShowReferenceFrame>false</ShowReferenceFrame>
+         <Name>Default Lights and Cameras</Name>
+         <Position>
+         </Position>
+         <Orientation>
+     <Angles>
+     </Angles>
+     <OrientationType>Bryant</OrientationType>
+         </Orientation>
+         <LockX>false</LockX>
+         <LockY>false</LockY>
+         <LockZ>false</LockZ>
+         <LockXPitch>false</LockXPitch>
+         <LockYYaw>false</LockYYaw>
+         <LockZRoll>false</LockZRoll>
+         <Childs>
+     <Light>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Ambient</Name>
+      <Position>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </ZAxis>
+       <YAxis>
+        <Y>
+         <Value>1</Value>
+        </Y>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <LightType>0</LightType>
+      <LightColor>
+       <Color>
+        <X>
+         <Value>0.3</Value>
+        </X>
+        <Y>
+         <Value>0.3</Value>
+        </Y>
+        <Z>
+         <Value>0.3</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </LightColor>
+      <AmbientLight>
+       <Color>
+        <X>
+         <Value>0.3</Value>
+        </X>
+        <Y>
+         <Value>0.3</Value>
+        </Y>
+        <Z>
+         <Value>0.3</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </AmbientLight>
+      <AmbientOn>true</AmbientOn>
+      <DiffuseOn>false</DiffuseOn>
+      <SpecularOn>false</SpecularOn>
+     </Light>
+     <Light>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Parallel</Name>
+      <Position>
+       <X>
+        <Value>-3</Value>
+       </X>
+       <Y>
+        <Value>5</Value>
+       </Y>
+       <Z>
+        <Value>3</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <X>
+         <Value>0.457495710997814</Value>
+        </X>
+        <Y>
+         <Value>-0.762492851663023</Value>
+        </Y>
+        <Z>
+         <Value>-0.457495710997814</Value>
+        </Z>
+       </ZAxis>
+       <YAxis>
+        <X>
+         <Value>0.235379601434674</Value>
+        </X>
+        <Y>
+         <Value>-0.392299335724456</Value>
+        </Y>
+        <Z>
+         <Value>0.889211827642101</Value>
+        </Z>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <LightType>3</LightType>
+      <LightColor>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </LightColor>
+      <Attenuation>
+       <Constant>
+        <Value>1</Value>
+       </Constant>
+       <Linear>
+        <Value>0</Value>
+       </Linear>
+       <Quadratic>
+        <Value>0</Value>
+       </Quadratic>
+      </Attenuation>
+      <DiffuseLight>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </DiffuseLight>
+      <SpecularLight>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </SpecularLight>
+      <AmbientOn>false</AmbientOn>
+      <DiffuseOn>true</DiffuseOn>
+      <SpecularOn>true</SpecularOn>
+     </Light>
+     <Light>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Spot Light 1</Name>
+      <Position>
+       <X>
+        <Value>-3</Value>
+       </X>
+       <Y>
+        <Value>-5</Value>
+       </Y>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <X>
+         <Value>0.50709255283711</Value>
+        </X>
+        <Y>
+         <Value>0.845154254728517</Value>
+        </Y>
+        <Z>
+         <Value>-0.169030850945703</Value>
+        </Z>
+       </ZAxis>
+       <YAxis>
+        <X>
+         <Value>0.0869656553478673</Value>
+        </X>
+        <Y>
+         <Value>0.144942758913112</Value>
+        </Y>
+        <Z>
+         <Value>0.985610760609162</Value>
+        </Z>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <LightType>2</LightType>
+      <LightColor>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </LightColor>
+      <Attenuation>
+       <Constant>
+        <Value>1</Value>
+       </Constant>
+       <Linear>
+        <Value>0.05</Value>
+       </Linear>
+       <Quadratic>
+        <Value>0.05</Value>
+       </Quadratic>
+      </Attenuation>
+      <Umbra>
+       <Value>1.0471975511966</Value>
+      </Umbra>
+      <Penumbra>
+       <Value>1.0471975511966</Value>
+      </Penumbra>
+      <SpotExponent>0</SpotExponent>
+      <DiffuseLight>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </DiffuseLight>
+      <SpecularLight>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </SpecularLight>
+      <AmbientOn>false</AmbientOn>
+      <DiffuseOn>true</DiffuseOn>
+      <SpecularOn>true</SpecularOn>
+     </Light>
+     <Light>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Spot Light 2</Name>
+      <Position>
+       <X>
+        <Value>2</Value>
+       </X>
+       <Y>
+        <Value>-3</Value>
+       </Y>
+       <Z>
+        <Value>-1</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <X>
+         <Value>-0.534522483824849</Value>
+        </X>
+        <Y>
+         <Value>0.801783725737273</Value>
+        </Y>
+        <Z>
+         <Value>0.267261241912424</Value>
+        </Z>
+       </ZAxis>
+       <YAxis>
+        <X>
+         <Value>0.14824986333222</Value>
+        </X>
+        <Y>
+         <Value>-0.22237479499833</Value>
+        </Y>
+        <Z>
+         <Value>0.963624111659432</Value>
+        </Z>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <LightType>2</LightType>
+      <LightColor>
+       <Color>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </LightColor>
+      <Attenuation>
+       <Constant>
+        <Value>1</Value>
+       </Constant>
+       <Linear>
+        <Value>0.05</Value>
+       </Linear>
+       <Quadratic>
+        <Value>0.05</Value>
+       </Quadratic>
+      </Attenuation>
+      <Umbra>
+       <Value>1.5707963267949</Value>
+      </Umbra>
+      <Penumbra>
+       <Value>1.5707963267949</Value>
+      </Penumbra>
+      <SpotExponent>0</SpotExponent>
+      <DiffuseLight>
+       <Color>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </DiffuseLight>
+      <SpecularLight>
+       <Color>
+        <X>
+         <Value>0.5</Value>
+        </X>
+        <Y>
+         <Value>0.5</Value>
+        </Y>
+        <Z>
+         <Value>0.5</Value>
+        </Z>
+       </Color>
+       <Offset>
+       </Offset>
+       <Multipliers>
+        <X>
+         <Value>1</Value>
+        </X>
+        <Y>
+         <Value>1</Value>
+        </Y>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </Multipliers>
+       <Direct3DColorRange>true</Direct3DColorRange>
+      </SpecularLight>
+      <AmbientOn>false</AmbientOn>
+      <DiffuseOn>true</DiffuseOn>
+      <SpecularOn>true</SpecularOn>
+     </Light>
+     <Camera>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Camera Looking at Origin</Name>
+      <Position>
+       <X>
+        <Value>19.1360180275052</Value>
+       </X>
+       <Y>
+        <Value>10.0001045258108</Value>
+       </Y>
+       <Z>
+        <Value>9.41057261342782</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <X>
+         <Value>-0.906378858396752</Value>
+        </X>
+        <Y>
+         <Value>-0.355566820101397</Value>
+        </Y>
+        <Z>
+         <Value>-0.228143817567737</Value>
+        </Z>
+       </ZAxis>
+       <YAxis>
+        <X>
+         <Value>-0.212385891875784</Value>
+        </X>
+        <Y>
+         <Value>-0.0833176717540064</Value>
+        </Y>
+        <Z>
+         <Value>0.973627443381512</Value>
+        </Z>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <FrontPlane>0.01</FrontPlane>
+      <BackPlane>100</BackPlane>
+      <AutoFrontBack>true</AutoFrontBack>
+      <Field>0.00392699081698724</Field>
+      <Fieldy>45</Fieldy>
+      <PlaneLeft>-10</PlaneLeft>
+      <PlaneRight>10</PlaneRight>
+      <PlaneTop>10</PlaneTop>
+      <PlaneBottom>-10</PlaneBottom>
+      <UseLookatPosition>true</UseLookatPosition>
+      <LookatPosition>
+       <X>
+        <Value>-0.995990153153436</Value>
+       </X>
+       <Y>
+        <Value>2.10244223510597</Value>
+       </Y>
+       <Z>
+        <Value>4.34316271182807</Value>
+       </Z>
+      </LookatPosition>
+      <UseAlwaysLookUp>true</UseAlwaysLookUp>
+      <LookUpVector>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </LookUpVector>
+      <RightHand>true</RightHand>
+      <Perspective>true</Perspective>
+      <IsSelectedCamera>true</IsSelectedCamera>
+     </Camera>
+     <Camera>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Front(XY)-Camera</Name>
+      <Position>
+       <Z>
+        <Value>10</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <Z>
+         <Value>-1</Value>
+        </Z>
+       </ZAxis>
+       <YAxis>
+        <Y>
+         <Value>1</Value>
+        </Y>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <FrontPlane>0.01</FrontPlane>
+      <BackPlane>100</BackPlane>
+      <AutoFrontBack>true</AutoFrontBack>
+      <Field>10</Field>
+      <Fieldy>45</Fieldy>
+      <PlaneLeft>-10</PlaneLeft>
+      <PlaneRight>10</PlaneRight>
+      <PlaneTop>10</PlaneTop>
+      <PlaneBottom>-10</PlaneBottom>
+      <UseLookatPosition>true</UseLookatPosition>
+      <LookatPosition>
+      </LookatPosition>
+      <UseAlwaysLookUp>true</UseAlwaysLookUp>
+      <LookUpVector>
+       <Y>
+        <Value>1</Value>
+       </Y>
+      </LookUpVector>
+      <RightHand>true</RightHand>
+      <Perspective>false</Perspective>
+      <IsSelectedCamera>false</IsSelectedCamera>
+     </Camera>
+     <Camera>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Side(YZ)-Camera</Name>
+      <Position>
+       <X>
+        <Value>10</Value>
+       </X>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <X>
+         <Value>-1</Value>
+        </X>
+       </ZAxis>
+       <YAxis>
+        <Z>
+         <Value>1</Value>
+        </Z>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <FrontPlane>0.01</FrontPlane>
+      <BackPlane>100</BackPlane>
+      <AutoFrontBack>true</AutoFrontBack>
+      <Field>10</Field>
+      <Fieldy>45</Fieldy>
+      <PlaneLeft>-10</PlaneLeft>
+      <PlaneRight>10</PlaneRight>
+      <PlaneTop>10</PlaneTop>
+      <PlaneBottom>-10</PlaneBottom>
+      <UseLookatPosition>true</UseLookatPosition>
+      <LookatPosition>
+      </LookatPosition>
+      <UseAlwaysLookUp>true</UseAlwaysLookUp>
+      <LookUpVector>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </LookUpVector>
+      <RightHand>true</RightHand>
+      <Perspective>false</Perspective>
+      <IsSelectedCamera>false</IsSelectedCamera>
+     </Camera>
+     <Camera>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Top(XZ)-Camera</Name>
+      <Position>
+       <Y>
+        <Value>10</Value>
+       </Y>
+      </Position>
+      <Orientation>
+       <ZAxis>
+        <Y>
+         <Value>-1</Value>
+        </Y>
+       </ZAxis>
+       <YAxis>
+        <X>
+         <Value>1</Value>
+        </X>
+       </YAxis>
+       <OrientationType>Direct3D</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+      <FrontPlane>0.01</FrontPlane>
+      <BackPlane>100</BackPlane>
+      <AutoFrontBack>true</AutoFrontBack>
+      <Field>10</Field>
+      <Fieldy>45</Fieldy>
+      <PlaneLeft>-10</PlaneLeft>
+      <PlaneRight>10</PlaneRight>
+      <PlaneTop>10</PlaneTop>
+      <PlaneBottom>-10</PlaneBottom>
+      <UseLookatPosition>true</UseLookatPosition>
+      <LookatPosition>
+      </LookatPosition>
+      <UseAlwaysLookUp>true</UseAlwaysLookUp>
+      <LookUpVector>
+       <X>
+        <Value>1</Value>
+       </X>
+      </LookUpVector>
+      <RightHand>true</RightHand>
+      <Perspective>false</Perspective>
+      <IsSelectedCamera>false</IsSelectedCamera>
+     </Camera>
+         </Childs>
+        </Frame>
+        <Frame>
+         <ScaleValue>
+     <X>
+      <Value>1</Value>
+     </X>
+     <Y>
+      <Value>1</Value>
+     </Y>
+     <Z>
+      <Value>1</Value>
+     </Z>
+         </ScaleValue>
+         <ShowReferenceFrame>false</ShowReferenceFrame>
+         <Name>Scenery</Name>
+         <Position>
+     <Z>
+      <VariableName>model\States\heave</VariableName>
+      <Value>-1.02367798001519</Value>
+     </Z>
+         </Position>
+         <Orientation>
+     <Angles>
+     </Angles>
+     <OrientationType>Bryant</OrientationType>
+         </Orientation>
+         <LockX>false</LockX>
+         <LockY>false</LockY>
+         <LockZ>false</LockZ>
+         <LockXPitch>false</LockXPitch>
+         <LockYYaw>false</LockYYaw>
+         <LockZRoll>false</LockZRoll>
+         <Childs>
+     <File>
+      <Filename><![CDATA[drum.STL]]>
+</Filename>
+      <NormalizeSize>true</NormalizeSize>
+      <ToCenter>true</ToCenter>
+      <SmoothNormals>false</SmoothNormals>
+      <ShowInnerSide>true</ShowInnerSide>
+      <Tesselate>false</Tesselate>
+      <ScaleValue>
+       <X>
+        <Value>1</Value>
+       </X>
+       <Y>
+        <Value>1</Value>
+       </Y>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </ScaleValue>
+      <OverrideColor>true</OverrideColor>
+      <MeshColor>
+       <X>
+        <Value>0</Value>
+       </X>
+       <Y>
+        <Value>0.501960784313725</Value>
+       </Y>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </MeshColor>
+      <Alpha>1</Alpha>
+      <MeshColorMultipliers>
+       <X>
+        <Value>1</Value>
+       </X>
+       <Y>
+        <Value>1</Value>
+       </Y>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </MeshColorMultipliers>
+      <MeshColorOffsets>
+      </MeshColorOffsets>
+      <Direct3DColorRange>true</Direct3DColorRange>
+      <SpecularColor>
+       <X>
+        <Value>0.498039215686275</Value>
+       </X>
+       <Y>
+        <Value>0.498039215686275</Value>
+       </Y>
+       <Z>
+        <Value>0.498039215686275</Value>
+       </Z>
+      </SpecularColor>
+      <EmissiveColor>
+      </EmissiveColor>
+      <ShininessPower>
+       <Value>14.298713684082</Value>
+      </ShininessPower>
+      <OverrideQuality>false</OverrideQuality>
+      <ShowReferenceFrame>true</ShowReferenceFrame>
+      <Name>3D-File</Name>
+      <Position>
+       <Z>
+        <Value>10</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <Angles>
+        <X>
+         <VariableName>model\Winch\Idrum\angle</VariableName>
+         <Value>-1.79947573600834</Value>
+        </X>
+        <Y>
+         <Value>1.57</Value>
+        </Y>
+       </Angles>
+       <OrientationType>Bryant</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+      </Childs>
+     </File>
+     <Frame>
+      <ScaleValue>
+       <X>
+        <Value>1</Value>
+       </X>
+       <Y>
+        <Value>1</Value>
+       </Y>
+       <Z>
+        <Value>1</Value>
+       </Z>
+      </ScaleValue>
+      <ShowReferenceFrame>false</ShowReferenceFrame>
+      <Name>Reference Frame</Name>
+      <Position>
+       <Z>
+        <VariableName>model\States\yload</VariableName>
+        <Value>-0.298316791086142</Value>
+       </Z>
+      </Position>
+      <Orientation>
+       <Angles>
+       </Angles>
+       <OrientationType>Bryant</OrientationType>
+      </Orientation>
+      <LockX>false</LockX>
+      <LockY>false</LockY>
+      <LockZ>false</LockZ>
+      <LockXPitch>false</LockXPitch>
+      <LockYYaw>false</LockYYaw>
+      <LockZRoll>false</LockZRoll>
+      <Childs>
+       <File>
+        <Filename><![CDATA[ROV.STL]]>
+</Filename>
+        <NormalizeSize>true</NormalizeSize>
+        <ToCenter>true</ToCenter>
+        <SmoothNormals>false</SmoothNormals>
+        <ShowInnerSide>true</ShowInnerSide>
+        <Tesselate>false</Tesselate>
+        <ScaleValue>
+         <X>
+     <Value>1</Value>
+         </X>
+         <Y>
+     <Value>1</Value>
+         </Y>
+         <Z>
+     <Value>1</Value>
+         </Z>
+        </ScaleValue>
+        <OverrideColor>true</OverrideColor>
+        <MeshColor>
+         <X>
+     <Value>1</Value>
+         </X>
+         <Y>
+     <Value>1</Value>
+         </Y>
+         <Z>
+     <Value>1</Value>
+         </Z>
+        </MeshColor>
+        <Alpha>1</Alpha>
+        <MeshColorMultipliers>
+         <X>
+     <Value>1</Value>
+         </X>
+         <Y>
+     <Value>1</Value>
+         </Y>
+         <Z>
+     <Value>1</Value>
+         </Z>
+        </MeshColorMultipliers>
+        <MeshColorOffsets>
+        </MeshColorOffsets>
+        <Direct3DColorRange>true</Direct3DColorRange>
+        <SpecularColor>
+         <X>
+     <Value>0.5</Value>
+         </X>
+         <Y>
+     <Value>0.5</Value>
+         </Y>
+         <Z>
+     <Value>0.5</Value>
+         </Z>
+        </SpecularColor>
+        <EmissiveColor>
+        </EmissiveColor>
+        <ShininessPower>
+         <Value>15</Value>
+        </ShininessPower>
+        <OverrideQuality>false</OverrideQuality>
+        <ShowReferenceFrame>false</ShowReferenceFrame>
+        <Name>3D-File</Name>
+        <Position>
+        </Position>
+        <Orientation>
+         <Angles>
+         </Angles>
+         <OrientationType>Bryant</OrientationType>
+        </Orientation>
+        <LockX>false</LockX>
+        <LockY>false</LockY>
+        <LockZ>false</LockZ>
+        <LockXPitch>false</LockXPitch>
+        <LockYYaw>false</LockYYaw>
+        <LockZRoll>false</LockZRoll>
+        <Childs>
+        </Childs>
+       </File>
+      </Childs>
+     </Frame>
+         </Childs>
+        </Frame>
+       </Childs>
+      </Frame>
+     </MainFrame>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>2</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>true</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>displacement {m}</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>-19</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>-19</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>-19</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-2.5</Minimum>
+       <Maximum>2.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>0</Scaling>
+       <Label>yloadGlobal</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-2.5</Minimum>
+       <Maximum>2.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>0</Scaling>
+       <Label>heave</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-2.5</Minimum>
+       <Maximum>2.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>0</Scaling>
+       <Label>yload</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-2.5</Minimum>
+       <Maximum>2.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>0</Scaling>
+       <Label>vheave</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>65280</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\yloadGlobal</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>255</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711935</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\Heave\heave</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>255</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\yload</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>16711935</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711935</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\Heave\vheave</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>3</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>false</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>vdrum</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-300</Minimum>
+       <Maximum>200</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>vdrum</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\vdrum</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>4</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>false</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>vload</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-2.5</Minimum>
+       <Maximum>2.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>vload</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711935</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711935</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\vload</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>5</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>false</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>yload</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-2.5</Minimum>
+       <Maximum>2.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>yload</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>255</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>255</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\yload</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>6</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>false</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>Tdrum</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>2000</Minimum>
+       <Maximum>4000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>Tdrum</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\Tdrum</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>7</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>false</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>Tmotor</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-15</Minimum>
+       <Maximum>35</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>Thydmotor</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\Thydmotor</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>8</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>true</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>angdrum</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-7000</Minimum>
+       <Maximum>3000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>angledeg</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\Winch\Idrum\angledeg</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>9</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>true</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>Acc pressure</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-200</Minimum>
+       <Maximum>1800</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>PaccHP</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-200</Minimum>
+       <Maximum>800</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>PaccLP</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-200</Minimum>
+       <Maximum>800</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>PHPpipe</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-200</Minimum>
+       <Maximum>800</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>PLPpipe</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\PaccHP</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>16711935</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711935</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\PaccLP</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>255</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>255</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\PHPpipe</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>65280</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>65280</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\PLPpipe</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>10</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>true</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>Flow</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>true</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>30</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>-200</Minimum>
+       <Maximum>1800</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>QHPpipe</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-25000</Minimum>
+       <Maximum>25000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>QLPpipe</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-25000</Minimum>
+       <Maximum>25000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>QvalveHP</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-25000</Minimum>
+       <Maximum>25000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>QvalveLP</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-25000</Minimum>
+       <Maximum>25000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>QpumpHP</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-25000</Minimum>
+       <Maximum>25000</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>QpumpLP</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>255</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>255</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\QHPpipe</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>65280</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>65280</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\QLPpipe</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\QvalveHP</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>16711935</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711935</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>false</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\QvalveLP</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>0</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>0</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\QpumpHP</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>10040319</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>10040319</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>model\States\QpumpLP</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+   </Plots>
+   <PlotPanels>
+    <PlotPanel>
+     <PlotPanelId>1</PlotPanelId>
+     <PlotPanelVisible>true</PlotPanelVisible>
+     <Name>Window 1</Name>
+     <Tiling>0</Tiling>
+     <PlotIds>
+       <PlotId>3</PlotId>
+       <PlotId>4</PlotId>
+       <PlotId>5</PlotId>
+       <PlotId>6</PlotId>
+       <PlotId>7</PlotId>
+       <PlotId>8</PlotId>
+     </PlotIds>
+     <ToggleState>Base</ToggleState>
+    </PlotPanel>
+    <PlotPanel>
+     <PlotPanelId>2</PlotPanelId>
+     <PlotPanelVisible>true</PlotPanelVisible>
+     <Name>Window 2</Name>
+     <Tiling>1</Tiling>
+     <PlotIds>
+       <PlotId>1</PlotId>
+       <PlotId>2</PlotId>
+     </PlotIds>
+     <ToggleState>Base</ToggleState>
+    </PlotPanel>
+    <PlotPanel>
+     <PlotPanelId>3</PlotPanelId>
+     <PlotPanelVisible>true</PlotPanelVisible>
+     <Name>Window 3</Name>
+     <Tiling>1</Tiling>
+     <PlotIds>
+       <PlotId>9</PlotId>
+       <PlotId>10</PlotId>
+     </PlotIds>
+     <ToggleState>Base</ToggleState>
+    </PlotPanel>
+   </PlotPanels>
+   <WindowRectangles virtualDesktopWidth="1536" virtualDesktopHeight="864">
+     <WindowRectangle monitor="0" left="0" top="0" right="1536" bottom="864" plotpanelid="1">
+0 0.0266204 1 1
+     </WindowRectangle>
+     <WindowRectangle monitor="0" left="0" top="0" right="1536" bottom="864" plotpanelid="2">
+0.404948 0.516204 0.931641 0.905093
+     </WindowRectangle>
+     <WindowRectangle monitor="0" left="0" top="0" right="1536" bottom="864" plotpanelid="3">
+0.172526 0.108796 0.920573 0.825231
+     </WindowRectangle>
+   </WindowRectangles>
+  </PlotSpecs>
+  <RunSpecs>
+   <SimulatorSettings>
+    <StartTime>0</StartTime>
+    <FinishTime>30</FinishTime>
+    <Warp>true</Warp>
+    <FPGonio>true</FPGonio>
+    <UseOutputAfterEach>false</UseOutputAfterEach>
+    <OutputAfterEach>0.1</OutputAfterEach>
+    <EventEpsilon>1e-006</EventEpsilon>
+    <AlgebraicTolerance>1e-007</AlgebraicTolerance>
+    <SteadyStateAnalysis>false</SteadyStateAnalysis>
+    <UpdateHoldInstructions>true</UpdateHoldInstructions>
+   </SimulatorSettings>
+   <IntegrationMethods>
+    <IntegrationMethod>
+     <Name>Euler</Name>
+     <StepSize>0.01</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>BackwardEuler</Name>
+     <AbsoluteTolerance>1e-005</AbsoluteTolerance>
+     <RelativeTolerance>1e-005</RelativeTolerance>
+     <AlgebraicAbsoluteTolerance>1e-005</AlgebraicAbsoluteTolerance>
+     <AlgebraicRelativeTolerance>1e-005</AlgebraicRelativeTolerance>
+     <StepSize>0.01</StepSize>
+     <Alpha>1</Alpha>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>AdamsBashforth</Name>
+     <StepSize>0.01</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKutta2</Name>
+     <StepSize>0.01</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKutta4</Name>
+     <StepSize>0.0001</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKutta8</Name>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <AbsoluteTolerance>1e-006</AbsoluteTolerance>
+     <RelativeTolerance>1e-006</RelativeTolerance>
+     <SafetyFactor>0.9</SafetyFactor>
+     <Factor1>0.33</Factor1>
+     <Factor2>6</Factor2>
+     <Beta>0</Beta>
+     <UseMaxNrSteps>false</UseMaxNrSteps>
+     <MaxNrSteps>100000</MaxNrSteps>
+     <UseStiffDetection>false</UseStiffDetection>
+     <MaxNrStiffnessSteps>1000</MaxNrStiffnessSteps>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKuttaFehlberg</Name>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <AbsoluteTolerance>1e-006</AbsoluteTolerance>
+     <RelativeTolerance>1e-006</RelativeTolerance>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>VodeAdams</Name>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>true</UseMaximumStepSize>
+     <MaximumStepSize>0.0001</MaximumStepSize>
+     <AbsoluteTolerance>0.01</AbsoluteTolerance>
+     <RelativeTolerance>0.01</RelativeTolerance>
+     <VodeUseBDF>true</VodeUseBDF>
+     <VodeUseNewton>true</VodeUseNewton>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>BDFMethod</Name>
+     <AbsoluteTolerance>0.001</AbsoluteTolerance>
+     <RelativeTolerance>0.001</RelativeTolerance>
+     <AlgebraicAbsoluteTolerance>0.001</AlgebraicAbsoluteTolerance>
+     <AlgebraicRelativeTolerance>0.001</AlgebraicRelativeTolerance>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <UseFixedStepSize>false</UseFixedStepSize>
+     <FixedStepSize>0</FixedStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>MeBDFiMethod</Name>
+     <AbsoluteTolerance>1e-005</AbsoluteTolerance>
+     <RelativeTolerance>1e-005</RelativeTolerance>
+     <AlgebraicAbsoluteTolerance>1e-005</AlgebraicAbsoluteTolerance>
+     <AlgebraicRelativeTolerance>1e-005</AlgebraicRelativeTolerance>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <UseFixedStepSize>false</UseFixedStepSize>
+     <FixedStepSize>0</FixedStepSize>
+    </IntegrationMethod>
+    <SelectedIntegrationMethod>7</SelectedIntegrationMethod>
+   </IntegrationMethods>
+  </RunSpecs>
+  <MultipleRun>
+   <NrSteps>10</NrSteps>
+   <CopyFromStates>false</CopyFromStates>
+   <JoinParameterVariation>true</JoinParameterVariation>
+   <ClearAfterRun>true</ClearAfterRun>
+   <RedrawAfterRun>false</RedrawAfterRun>
+   <DrawDuringSimulation>true</DrawDuringSimulation>
+   <ActionBeforeOptimization>0</ActionBeforeOptimization>
+   <CompareValue>0</CompareValue>
+   <UseCompareValue>true</UseCompareValue>
+   <MultipleRunType>MultipleRun</MultipleRunType>
+   <Minimize>true</Minimize>
+   <OptimizationVariable></OptimizationVariable>
+   <ResulVarUsage>UseEndValue</ResulVarUsage>
+   <Tolerance>0.001</Tolerance>
+   <OptimizationMethod>BroydonFletcherGoldfarbShanno</OptimizationMethod>
+   <MultipleRunVariables>
+   </MultipleRunVariables>
+  </MultipleRun>
+  <ExportData>
+   <WriteAsText>true</WriteAsText>
+   <ReadAsText>true</ReadAsText>
+   <WriteHeader>true</WriteHeader>
+   <ReadHeader>true</ReadHeader>
+   <ReadFilename></ReadFilename>
+   <WriteFilename></WriteFilename>
+   <DoWrite>false</DoWrite>
+   <ExportVariables>
+   </ExportVariables>
+   <ImportVariables>
+   </ImportVariables>
+  </ExportData>
+  <BreakPoints>
+  </BreakPoints>
+  <AnimationPlayback>
+   <PlaybackSpeed>1</PlaybackSpeed>
+  </AnimationPlayback>
+</ExpData>
+  </Experiment>
+</Experiments>
+</Document>
